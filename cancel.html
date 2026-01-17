@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Canceled</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background: #fafafa;
+    }
+    h1 {
+      color: #c62828;
+      animation: fadeIn 1s ease-in;
+    }
+    p {
+      font-size: 16px;
+    }
+    #logo {
+      width: 150px; /* Adjust logo size */
+      margin-bottom: 20px;
+    }
+    #failure-message {
+      animation: slideIn 1s ease;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #c62828;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #791313;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!--<img src="logo.png" alt="Logo" id="logo">--> <!-- Logo Image -->
+  <h1 id="status-title"></h1>
+  
+  <div id="failure-message">
+    <p id="main-message"></p>
+    <p id="transaction-info"></p>
+    <p> --------------------- </p>
+    <p id="adverts-message"></p>
+    <p id="close-page"></p>
+  </div>
+  
+  <button onclick="closeWindow()">Close</button> <!-- Close Button -->
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const transactionDate = new Date().toLocaleDateString();
+    const transactionTime = new Date().toLocaleTimeString();
+
+    const userLanguage = navigator.language || navigator.userLanguage; // Get the user's language
+    const isFrench = userLanguage.startsWith('fr'); // Check if the language is French
+
+    // Content in different languages
+    const content = {
+      en: {
+        title: "Payment Canceled!",
+        mainMessage: "RCCG Sunday School Manual - Your subscription was unsuccessful.",
+        transactionInfo: "No charges were made.",
+        advertsMessage: "Adverts remain activated for all parish members.",
+        closePage: "You may now close this page and return to the app."
+      },
+      fr: {
+        title: "Paiement Annulé",
+        mainMessage: "Manuel de l'École du Dimanche RCCG - Votre abonnement n'a pas été accepté.",
+        transactionInfo: "Aucun frais n'a été prélevé.",
+        advertsMessage: "Les annonces restent activées pour tous les membres de la paroisse.",
+        closePage: "Vous pouvez maintenant fermer cette page et revenir à l'application."
+      }
+    };
+
+    // Set content based on the user's language
+    const selectedContent = isFrench ? content.fr : content.en;
+    document.getElementById("status-title").textContent = selectedContent.title;
+    document.getElementById("main-message").textContent = selectedContent.mainMessage;
+    document.getElementById("transaction-info").textContent = selectedContent.transactionInfo;
+    document.getElementById("adverts-message").textContent = selectedContent.advertsMessage;
+    document.getElementById("close-page").textContent = selectedContent.closePage;
+
+    if (sessionId) {
+      console.log("Stripe session:", sessionId);
+    }
+
+    function closeWindow() {
+      window.close(); // Closes the current window
+    }
+  </script>
+</body>
+
+</html>
